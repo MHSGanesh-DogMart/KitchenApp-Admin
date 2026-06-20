@@ -11,14 +11,74 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     setLoading(true);
-    // TODO: wire to your auth backend / NextAuth provider.
-    await new Promise((r) => setTimeout(r, 600));
-    router.push("/dashboard");
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://koala-wok-extruding.ngrok-free.dev";
+      const res = await fetch(`${apiUrl}/api/admin/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Invalid credentials");
+      }
+
+      // Save credentials/token to localStorage
+      localStorage.setItem("admin_token", data.data.token);
+      localStorage.setItem("admin_email", data.data.admin.email);
+
+      router.push("/dashboard");
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
   }
+
+  async function onForgotPassword() {
+    if (!email) {
+      setError("Please enter your email address first.");
+      return;
+    }
+    setLoading(true);
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://koala-wok-extruding.ngrok-free.dev";
+      const res = await fetch(`${apiUrl}/api/admin/auth/forgot-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        throw new Error(data.message || "Email not found");
+      }
+
+      setSuccessMessage(data.message || "Reset link sent successfully!");
+    } catch (err: any) {
+      setError(err.message || "An error occurred");
+    } finally {
+      setLoading(false);
+    }
+  }
+
 
   return (
     <main className="min-h-dvh grid lg:grid-cols-2 bg-bg">
@@ -43,6 +103,17 @@ export default function LoginPage() {
             to authorised Padosi staff.
           </p>
 
+          {error && (
+            <div className="mt-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-red-500 text-[13px] font-medium">
+              ⚠️ {error}
+            </div>
+          )}
+          {successMessage && (
+            <div className="mt-4 p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-500 text-[13px] font-medium">
+              ✅ {successMessage}
+            </div>
+          )}
+
           <div className="mt-8 space-y-4">
             <Field
               icon={<Mail className="h-4 w-4 text-muted" />}
@@ -61,10 +132,10 @@ export default function LoginPage() {
               placeholder="Your password"
               trailing={
                 <button
-                  type="button"
-                  onClick={() => setShow((s) => !s)}
-                  className="text-muted hover:text-ink p-1"
-                  aria-label={show ? "Hide password" : "Show password"}
+                   type="button"
+                   onClick={() => setShow((s) => !s)}
+                   className="text-muted hover:text-ink p-1"
+                   aria-label={show ? "Hide password" : "Show password"}
                 >
                   {show ? (
                     <EyeOff className="h-4 w-4" />
@@ -76,16 +147,20 @@ export default function LoginPage() {
             />
 
             <div className="flex items-center justify-between text-[12.5px]">
-              <label className="flex items-center gap-2 text-ink-soft">
+              <label className="flex items-center gap-2 text-ink-soft cursor-pointer">
                 <input
                   type="checkbox"
                   className="h-4 w-4 rounded border-line accent-primary"
                 />
                 Keep me signed in
               </label>
-              <a className="font-display font-bold text-primary hover:underline">
+              <button
+                type="button"
+                onClick={onForgotPassword}
+                className="font-display font-bold text-primary hover:underline cursor-pointer bg-transparent border-none outline-none"
+              >
                 Forgot password?
-              </a>
+              </button>
             </div>
           </div>
 
