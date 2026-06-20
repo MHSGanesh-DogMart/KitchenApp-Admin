@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html, body {
+    @apply bg-bg text-ink antialiased;
+    font-feature-settings: "ss01", "cv11";
+  }
+  ::selection {
+    @apply bg-primary/20 text-ink;
+  }
+}
+
+@layer components {
+  /* Uppercase kicker label used above cards and section headings.
+     Mirrors the Flutter Space-Grotesk 11sp w700 letter-spaced 1.2 pattern. */
+  .kicker {
+    @apply text-[11px] font-display font-bold text-muted tracking-[0.12em] uppercase;
+  }
+
+  /* Editorial headline — Space Grotesk display weight. */
+  .h1-display {
+    @apply font-display font-bold text-[28px] tracking-[-0.02em] text-ink leading-[1.1];
+  }
+  .h2-display {
+    @apply font-display font-bold text-[22px] tracking-[-0.02em] text-ink leading-[1.15];
+  }
+
+  /* Padosi card surface — soft, lifted. */
+  .card {
+    @apply bg-surface rounded-2xl border border-line shadow-card;
+  }
+  .card-padded {
+    @apply card p-5;
+  }
+
+  /* Sidebar nav item — used in the ink command rail. */
+  .nav-item {
+    @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium
+           text-white/55 hover:text-white hover:bg-white/[0.06] transition-colors;
+  }
+  .nav-item-active {
+    @apply text-white bg-white/[0.10];
+  }
+
+  /* Pill chip used in tables/cards. */
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1
+           text-[11px] font-display font-bold;
+  }
+}
