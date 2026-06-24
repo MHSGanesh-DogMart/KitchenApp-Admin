@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   ChefHat,
+  Globe,
   LayoutDashboard,
   LogOut,
   Megaphone,
@@ -14,6 +15,7 @@ import {
   Ticket,
   Users,
   Wallet,
+  UtensilsCrossed,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -29,10 +31,12 @@ const primary: NavItem[] = [
   { label: "Orders", href: "/orders", icon: Receipt },
   { label: "Customers", href: "/customers", icon: Users },
   { label: "Payouts", href: "/payouts", icon: Wallet },
+  { label: "City Map", href: "/cities", icon: Globe },
 ];
 
 const secondary: NavItem[] = [
   { label: "Coupons", href: "/coupons", icon: Ticket },
+  { label: "Cuisines", href: "/cuisines", icon: UtensilsCrossed },
   { label: "Reviews", href: "/reviews", icon: Star },
   { label: "Community", href: "/community", icon: MessagesSquare },
   { label: "Broadcasts", href: "/broadcasts", icon: Megaphone },

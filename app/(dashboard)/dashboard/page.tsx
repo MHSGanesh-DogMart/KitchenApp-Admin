@@ -1,3 +1,4 @@
+import Link from "next/link";
 import {
   ArrowUpRight,
   ChefHat,
@@ -86,12 +87,12 @@ export default function DashboardPage() {
                 <p className="kicker">TOP KITCHENS</p>
                 <p className="h2-display mt-1">This week</p>
               </div>
-              <a
+              <Link
                 href="/cooks"
                 className="text-primary text-[12.5px] font-display font-bold inline-flex items-center gap-1 hover:underline"
               >
                 View all <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
+              </Link>
             </div>
             <div className="space-y-3">
               {[
