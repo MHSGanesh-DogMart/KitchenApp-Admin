@@ -29,7 +29,7 @@ export default function OrdersPage() {
           <div className="flex items-center gap-2 h-10 px-3.5 rounded-xl bg-cream flex-1 min-w-[240px]">
             <Search className="h-4 w-4 text-muted" />
             <input
-              placeholder="Search by ID, customer or cook…"
+              placeholder="Search by ID, customer or kitchen…"
               className="flex-1 bg-transparent outline-none text-[13px] placeholder:text-muted"
             />
           </div>
@@ -59,7 +59,7 @@ export default function OrdersPage() {
                 <tr>
                   <th className="text-left font-display font-bold px-5 py-3">Order</th>
                   <th className="text-left font-display font-bold px-5 py-3">Customer</th>
-                  <th className="text-left font-display font-bold px-5 py-3">Cook</th>
+                  <th className="text-left font-display font-bold px-5 py-3">Kitchen</th>
                   <th className="text-right font-display font-bold px-5 py-3">Items</th>
                   <th className="text-right font-display font-bold px-5 py-3">Total</th>
                   <th className="text-left font-display font-bold px-5 py-3">Payment</th>

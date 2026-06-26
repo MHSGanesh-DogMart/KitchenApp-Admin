@@ -43,7 +43,7 @@ export default function CouponsPage() {
   // Toast State
   const [toasts, setToasts] = useState<{ id: string; message: string; type: "success" | "error" | "info" }[]>([]);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://koala-wok-extruding.ngrok-free.dev";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
 
   // Helper to show toasts
   const showToast = (message: string, type: "success" | "error" | "info" = "success") => {

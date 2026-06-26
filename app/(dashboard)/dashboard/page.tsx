@@ -39,7 +39,7 @@ export default function DashboardPage() {
           />
           <StatCard
             icon={ChefHat}
-            label="ACTIVE COOKS"
+            label="ACTIVE KITCHENS"
             value="142"
             delta={{ value: "+4", positive: true }}
             tint="success"
@@ -88,7 +88,7 @@ export default function DashboardPage() {
                 <p className="h2-display mt-1">This week</p>
               </div>
               <Link
-                href="/cooks"
+                href="/kitchens"
                 className="text-primary text-[12.5px] font-display font-bold inline-flex items-center gap-1 hover:underline"
               >
                 View all <ArrowUpRight className="h-3.5 w-3.5" />
@@ -147,7 +147,7 @@ export default function DashboardPage() {
                     Customer
                   </th>
                   <th className="text-left font-display font-bold px-5 py-3">
-                    Cook
+                    Kitchen
                   </th>
                   <th className="text-right font-display font-bold px-5 py-3">
                     Total

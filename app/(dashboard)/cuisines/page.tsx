@@ -73,7 +73,7 @@ export default function CuisinesPage() {
   // Toast
   const [toasts, setToasts] = useState<{ id: string; message: string; type: "success" | "error" }[]>([]);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "https://koala-wok-extruding.ngrok-free.dev";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
 
@@ -89,7 +89,6 @@ export default function CuisinesPage() {
     setLoading(true);
     try {
       const res = await fetch(`${apiUrl}/api/admin/cuisines`, {
-        headers: { "ngrok-skip-browser-warning": "true" },
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Failed to load cuisines");
@@ -187,7 +186,6 @@ export default function CuisinesPage() {
         method,
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify(payload),
       });
@@ -212,7 +210,6 @@ export default function CuisinesPage() {
     try {
       const res = await fetch(`${apiUrl}/api/admin/cuisines/${c.id}`, {
         method: "DELETE",
-        headers: { "ngrok-skip-browser-warning": "true" },
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || "Delete failed");
@@ -233,7 +230,6 @@ export default function CuisinesPage() {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true",
         },
         body: JSON.stringify({ isActive: !c.isActive }),
       });

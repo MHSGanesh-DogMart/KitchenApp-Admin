@@ -8,7 +8,7 @@ export function Topbar({
   subtitle?: string;
 }) {
   return (
-    <header className="sticky top-0 z-10 border-b border-line bg-bg/85 backdrop-blur-md">
+    <header className="sticky top-0 z-20 border-b border-line bg-bg/85 backdrop-blur-md">
       <div className="flex items-center gap-4 px-6 lg:px-8 h-16">
         <div className="flex-1 min-w-0">
           <h1 className="font-display font-bold text-[18px] tracking-tight leading-none">
