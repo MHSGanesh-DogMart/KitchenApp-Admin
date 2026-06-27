@@ -1,22 +1,63 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Topbar } from "@/components/layout/Topbar";
-import { customers } from "@/lib/mock-data";
-import { cn, inr, shortDate } from "@/lib/utils";
+import { cn, shortDate } from "@/lib/utils";
 import { Download, Search, UserPlus2 } from "lucide-react";
 
+type ApiUser = {
+  id: string;
+  name: string;
+  email?: string | null;
+  phone: string;
+  dob?: string | null;
+  profilePicUrl?: string | null;
+  status?: string | null;
+  createdAt: string;
+};
+
 export default function CustomersPage() {
+  const apiUrl =
+    process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+
+  const [users, setUsers] = useState<ApiUser[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [query, setQuery] = useState("");
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const res = await fetch(`${apiUrl}/api/admin/users`);
+        const data = await res.json();
+        if (data.success) setUsers(data.data || []);
+      } catch {
+        // leave empty on failure
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [apiUrl]);
+
+  const filtered = users.filter((u) => {
+    if (!query.trim()) return true;
+    const q = query.toLowerCase();
+    return (
+      u.name.toLowerCase().includes(q) ||
+      (u.email || "").toLowerCase().includes(q) ||
+      u.phone.includes(q)
+    );
+  });
+
   return (
     <>
-      <Topbar
-        title="Customers"
-        subtitle={`${customers.length} diners on Padosi`}
-      />
+      <Topbar title="Customers" subtitle={`${users.length} diners on Padosi`} />
       <div className="flex-1 p-6 lg:p-8 space-y-6">
         {/* Segment summary */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <SegTile label="CHAMPIONS" value={`${customers.filter((c) => c.segment === "champion").length}`} hint="Top 10% LTV" accent="primary" />
-          <SegTile label="LOYAL"     value={`${customers.filter((c) => c.segment === "loyal").length}`}     hint="5+ orders" accent="secondary" />
-          <SegTile label="NEW"       value={`${customers.filter((c) => c.segment === "new").length}`}       hint="Last 30 days" accent="success" />
-          <SegTile label="AT RISK"   value={`${customers.filter((c) => c.segment === "at_risk").length}`}   hint="No order in 60d" accent="warn" />
+          <SegTile label="TOTAL" value={`${users.length}`} hint="All customers" accent="primary" />
+          <SegTile label="WITH EMAIL" value={`${users.filter((u) => u.email).length}`} hint="Provided email" accent="secondary" />
+          <SegTile label="ACTIVE" value={`${users.filter((u) => (u.status ?? "Active") === "Active").length}`} hint="Not blocked" accent="success" />
+          <SegTile label="BLOCKED" value={`${users.filter((u) => u.status === "Blocked").length}`} hint="Suspended" accent="warn" />
         </div>
 
         {/* Toolbar */}
@@ -24,21 +65,12 @@ export default function CustomersPage() {
           <div className="flex items-center gap-2 h-10 px-3.5 rounded-xl bg-cream flex-1 min-w-[240px]">
             <Search className="h-4 w-4 text-muted" />
             <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by name, phone or email…"
               className="flex-1 bg-transparent outline-none text-[13px] placeholder:text-muted"
             />
           </div>
-          {["All", "Champions", "Loyal", "New", "At risk"].map((t, i) => (
-            <button
-              key={t}
-              className={cn(
-                "h-9 px-3.5 rounded-full text-[12px] font-display font-bold border",
-                i === 0 ? "bg-ink text-white border-ink" : "bg-surface text-ink-soft border-line hover:border-ink/30",
-              )}
-            >
-              {t}
-            </button>
-          ))}
           <button className="ml-auto h-10 px-4 rounded-xl bg-surface border border-line font-display font-bold text-[12.5px] inline-flex items-center gap-2 hover:border-ink/30">
             <Download className="h-4 w-4" /> Export
           </button>
@@ -55,35 +87,42 @@ export default function CustomersPage() {
                 <tr>
                   <th className="text-left font-display font-bold px-5 py-3">Customer</th>
                   <th className="text-left font-display font-bold px-5 py-3">Phone</th>
-                  <th className="text-left font-display font-bold px-5 py-3">City</th>
-                  <th className="text-right font-display font-bold px-5 py-3">Orders</th>
-                  <th className="text-right font-display font-bold px-5 py-3">Spend</th>
+                  <th className="text-left font-display font-bold px-5 py-3">Birthday</th>
                   <th className="text-left font-display font-bold px-5 py-3">Joined</th>
-                  <th className="text-left font-display font-bold px-5 py-3">Segment</th>
+                  <th className="text-left font-display font-bold px-5 py-3">Status</th>
                 </tr>
               </thead>
               <tbody>
-                {customers.map((c) => (
-                  <tr key={c.id} className="border-t border-line hover:bg-cream/30">
-                    <td className="px-5 py-4">
-                      <div className="flex items-center gap-3">
-                        <div className="h-9 w-9 rounded-full bg-secondary text-white grid place-items-center text-[11px] font-display font-bold">
-                          {initials(c.name)}
+                {loading ? (
+                  <tr><td colSpan={5} className="px-5 py-10 text-center text-muted">Loading customers…</td></tr>
+                ) : filtered.length === 0 ? (
+                  <tr><td colSpan={5} className="px-5 py-10 text-center text-muted">No customers yet.</td></tr>
+                ) : (
+                  filtered.map((u) => (
+                    <tr key={u.id} className="border-t border-line hover:bg-cream/30">
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          {u.profilePicUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={u.profilePicUrl} alt={u.name} className="h-9 w-9 rounded-full object-cover" />
+                          ) : (
+                            <div className="h-9 w-9 rounded-full bg-secondary text-white grid place-items-center text-[11px] font-display font-bold">
+                              {initials(u.name)}
+                            </div>
+                          )}
+                          <div>
+                            <p className="font-display font-bold text-ink">{u.name}</p>
+                            <p className="text-[11px] text-muted">{u.email || "—"}</p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="font-display font-bold text-ink">{c.name}</p>
-                          <p className="text-[11px] text-muted">{c.email}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td className="px-5 py-4 text-ink-soft font-mono text-[12px]">{c.phone}</td>
-                    <td className="px-5 py-4 text-ink-soft">{c.city}</td>
-                    <td className="px-5 py-4 text-right">{c.lifetimeOrders}</td>
-                    <td className="px-5 py-4 text-right font-display font-bold">{inr(c.lifetimeSpend)}</td>
-                    <td className="px-5 py-4 text-ink-soft text-[12px]">{shortDate(c.joinedAt)}</td>
-                    <td className="px-5 py-4"><SegmentChip seg={c.segment} /></td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="px-5 py-4 text-ink-soft font-mono text-[12px]">{u.phone}</td>
+                      <td className="px-5 py-4 text-ink-soft text-[12px]">{u.dob || "—"}</td>
+                      <td className="px-5 py-4 text-ink-soft text-[12px]">{shortDate(new Date(u.createdAt))}</td>
+                      <td className="px-5 py-4"><StatusChip status={u.status ?? "Active"} /></td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -95,10 +134,10 @@ export default function CustomersPage() {
 
 function SegTile({ label, value, hint, accent }: { label: string; value: string; hint: string; accent: "primary" | "secondary" | "success" | "warn" }) {
   const accentCls = {
-    primary:   "text-primary",
+    primary: "text-primary",
     secondary: "text-secondary",
-    success:   "text-success",
-    warn:      "text-warn",
+    success: "text-success",
+    warn: "text-warn",
   }[accent];
   return (
     <div className="card-padded">
@@ -109,15 +148,9 @@ function SegTile({ label, value, hint, accent }: { label: string; value: string;
   );
 }
 
-function SegmentChip({ seg }: { seg: string }) {
-  const map: Record<string, { label: string; cls: string }> = {
-    champion: { label: "Champion", cls: "bg-primary-soft text-primary" },
-    loyal:    { label: "Loyal",    cls: "bg-secondary-soft text-secondary" },
-    new:      { label: "New",      cls: "bg-success-soft text-success" },
-    at_risk:  { label: "At risk",  cls: "bg-[#FFF3D6] text-warn" },
-  };
-  const s = map[seg] ?? { label: seg, cls: "bg-cream text-muted" };
-  return <span className={cn("chip", s.cls)}>{s.label}</span>;
+function StatusChip({ status }: { status: string }) {
+  const cls = status === "Blocked" ? "bg-[#FFF3D6] text-warn" : "bg-success-soft text-success";
+  return <span className={cn("chip", cls)}>{status}</span>;
 }
 
 function initials(name: string) {
