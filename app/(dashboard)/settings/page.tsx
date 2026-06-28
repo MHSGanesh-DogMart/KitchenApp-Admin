@@ -70,7 +70,9 @@ export default function SettingsPage() {
       "platformFee",
       "defaultStateRadius",
       "defaultCityRadius",
-      "defaultVillageRadius"
+      "defaultVillageRadius",
+      "deliveryRadiusKm",
+      "pickupRadiusKm"
     ].includes(fieldName)) {
       const num = Number(rawValue);
       if (isNaN(num) || num < 0) {
@@ -267,6 +269,36 @@ export default function SettingsPage() {
             onSave={() => handleSaveField("defaultVillageRadius", String(Number(editValue) * 1000))}
             onCancel={() => setEditingField(null)}
             onEdit={() => startEditing("defaultVillageRadius", config ? config.defaultVillageRadius / 1000 : 5)}
+          />
+        </Section>
+
+        {/* Delivery & Pickup */}
+        <Section kicker="DELIVERY & PICKUP" title="Order fulfilment radii">
+          <EditableField
+            label="Delivery radius"
+            fieldName="deliveryRadiusKm"
+            value={config ? `${config.deliveryRadiusKm} km` : "10 km"}
+            icon={MapPin}
+            hint="Default max distance a kitchen delivers (km). A kitchen's own radius overrides this."
+            editing={editingField === "deliveryRadiusKm"}
+            editValue={editValue}
+            setEditValue={setEditValue}
+            onSave={() => handleSaveField("deliveryRadiusKm", editValue)}
+            onCancel={() => setEditingField(null)}
+            onEdit={() => startEditing("deliveryRadiusKm", config?.deliveryRadiusKm)}
+          />
+          <EditableField
+            label="Pickup radius"
+            fieldName="pickupRadiusKm"
+            value={config ? `${config.pickupRadiusKm} km` : "25 km"}
+            icon={MapPin}
+            hint="Max distance a customer can be from a kitchen to self-pickup (km)."
+            editing={editingField === "pickupRadiusKm"}
+            editValue={editValue}
+            setEditValue={setEditValue}
+            onSave={() => handleSaveField("pickupRadiusKm", editValue)}
+            onCancel={() => setEditingField(null)}
+            onEdit={() => startEditing("pickupRadiusKm", config?.pickupRadiusKm)}
           />
         </Section>
 
