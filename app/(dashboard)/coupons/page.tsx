@@ -11,6 +11,7 @@ interface Coupon {
   description: string;
   type: "flat" | "percent" | "free_delivery";
   value: number;
+  minOrderValue?: number;
   redemptions: number;
   cap: number;
   status: "active" | "scheduled" | "expired" | "inactive";
@@ -37,6 +38,7 @@ export default function CouponsPage() {
   const [newDescription, setNewDescription] = useState("");
   const [newType, setNewType] = useState<"flat" | "percent" | "free_delivery">("flat");
   const [newValue, setNewValue] = useState("50");
+  const [newMinOrder, setNewMinOrder] = useState("0");
   const [newCap, setNewCap] = useState("1000");
   const [newEndsAt, setNewEndsAt] = useState("");
 
@@ -109,6 +111,7 @@ export default function CouponsPage() {
     setNewDescription("");
     setNewType("flat");
     setNewValue("50");
+    setNewMinOrder("0");
     setNewCap("1000");
     setNewEndsAt("");
     setNewStatus("active");
@@ -121,6 +124,7 @@ export default function CouponsPage() {
     setNewDescription(coupon.description);
     setNewType(coupon.type);
     setNewValue(String(coupon.value));
+    setNewMinOrder(String(coupon.minOrderValue ?? 0));
     setNewCap(String(coupon.cap));
     setNewEndsAt(coupon.endsAt.split("T")[0]);
     setNewStatus(coupon.status);
@@ -164,6 +168,7 @@ export default function CouponsPage() {
             description: newDescription.trim(),
             type: newType,
             value: valueNum,
+            minOrderValue: Math.max(0, Number(newMinOrder) || 0),
             cap: capNum,
             endsAt: new Date(newEndsAt).toISOString(),
             status: newStatus,
@@ -196,6 +201,7 @@ export default function CouponsPage() {
             description: newDescription.trim(),
             type: newType,
             value: valueNum,
+            minOrderValue: Math.max(0, Number(newMinOrder) || 0),
             cap: capNum,
             endsAt: new Date(newEndsAt).toISOString(),
           }),
@@ -472,6 +478,18 @@ export default function CouponsPage() {
 
               {/* Grid: Cap & Expiration */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-bold text-ink-soft uppercase tracking-wider block">Minimum Order (₹)</label>
+                  <input
+                    type="number"
+                    value={newMinOrder}
+                    onChange={(e) => setNewMinOrder(e.target.value)}
+                    placeholder="e.g. 149 (0 = no minimum)"
+                    min="0"
+                    className="w-full h-10 px-3 bg-surface border border-line rounded-xl text-[13px] outline-none focus:border-primary"
+                  />
+                </div>
+
                 <div className="space-y-1.5">
                   <label className="text-[11px] font-bold text-ink-soft uppercase tracking-wider block">Usage Cap (Redemptions)</label>
                   <input
