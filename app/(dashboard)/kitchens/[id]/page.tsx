@@ -95,7 +95,7 @@ export default function KitchenDetailsPage() {
   const [toasts, setToasts]               = useState<{ id: string; message: string; type: "success"|"error"|"info" }[]>([]);
   const [lightbox, setLightbox]           = useState<{ src: string; title: string } | null>(null);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   const toast = (message: string, type: "success"|"error"|"info" = "success") => {
     const toastId = Math.random().toString(36).slice(2, 9);

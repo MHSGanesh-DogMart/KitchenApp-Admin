@@ -21,7 +21,7 @@ export default function LoginPage() {
     setSuccessMessage("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
       const res = await fetch(`${apiUrl}/api/admin/auth/login`, {
         method: "POST",
         headers: {
@@ -57,7 +57,7 @@ export default function LoginPage() {
     setSuccessMessage("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
       const res = await fetch(`${apiUrl}/api/admin/auth/forgot-password`, {
         method: "POST",
         headers: {

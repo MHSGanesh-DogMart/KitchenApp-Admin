@@ -29,7 +29,7 @@ export default function SettingsPage() {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<string>("");
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   // Fetch current config
   const fetchConfig = async () => {

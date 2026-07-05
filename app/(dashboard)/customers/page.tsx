@@ -18,7 +18,7 @@ type ApiUser = {
 
 export default function CustomersPage() {
   const apiUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+    process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   const [users, setUsers] = useState<ApiUser[]>([]);
   const [loading, setLoading] = useState(true);

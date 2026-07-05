@@ -85,7 +85,7 @@ export default function KitchensPage() {
   const [deleteTargetName, setDeleteTargetName] = useState("");
   const [deleting, setDeleting] = useState(false);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   // Fetch active cities list
   const fetchCities = async () => {

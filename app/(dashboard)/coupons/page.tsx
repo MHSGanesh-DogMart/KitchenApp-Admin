@@ -45,7 +45,7 @@ export default function CouponsPage() {
   // Toast State
   const [toasts, setToasts] = useState<{ id: string; message: string; type: "success" | "error" | "info" }[]>([]);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   // Helper to show toasts
   const showToast = (message: string, type: "success" | "error" | "info" = "success") => {

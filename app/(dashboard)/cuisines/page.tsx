@@ -73,7 +73,7 @@ export default function CuisinesPage() {
   // Toast
   const [toasts, setToasts] = useState<{ id: string; message: string; type: "success" | "error" }[]>([]);
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   // ─── Helpers ─────────────────────────────────────────────────────────────
 

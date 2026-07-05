@@ -46,7 +46,7 @@ export default function CitiesPage() {
   const [tempType, setTempType] = useState<string>("city");
   const [tempRadius, setTempRadius] = useState<number>(15000); // default 15km in meters
 
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.196.137";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://13.207.75.184";
 
   // Helper to show custom toasts
   const showToast = (message: string, type: "success" | "error" | "info" = "success") => {
